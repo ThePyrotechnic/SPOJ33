@@ -18,7 +18,6 @@ def all_lcs_helper(table, alice, bob, a, b):
     if a == 0 or b == 0:
         return set()
     elif alice[a - 1] == bob[b - 1]:
-        # Can use alice or bob
         lcs = set()
         res = all_lcs_helper(table, alice, bob, a - 1, b - 1)
         if len(res) > 0:
@@ -28,14 +27,14 @@ def all_lcs_helper(table, alice, bob, a, b):
             lcs.add(alice[a - 1])
         return lcs
     else:
-        lcs_2 = set()
+        lcs = set()
         if table[a, b - 1] >= table[a - 1, b]:
             res = all_lcs_helper(table, alice, bob, a, b - 1)
-            lcs_2.update(res)
+            lcs.update(res)
         if table[a - 1, b] >= table[a, b - 1]:
             res = all_lcs_helper(table, alice, bob, a - 1, b)
-            lcs_2.update(res)
-        return lcs_2
+            lcs.update(res)
+        return lcs
 
 
 def all_lcs(alice, bob):
@@ -43,8 +42,6 @@ def all_lcs(alice, bob):
 
 
 def main():
-    # print(all_lcs('acb', 'adb'))
-    # print(sorted(all_lcs('abcabcaa', 'acbacba')))
     n = int(input())
     for a in range(n):
         alice = input()

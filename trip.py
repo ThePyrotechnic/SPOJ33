@@ -1,3 +1,6 @@
+# I pledge my honor that I have abided by the Stevens honor system
+# Sam Kraus, Edward Roy Minnix III, Michael Manis
+
 # too lazy to write memoization for myself
 from functools import lru_cache
 
@@ -15,11 +18,13 @@ class HashDict(dict):
 def lcs_table(alice, bob):
     # Fast enough
     lcs = {}
+    # Zero dict to start
     for a in range(len(alice) + 1):
         lcs[a, 0] = 0
     for b in range(len(bob) + 1):
         lcs[0, b] = 0
 
+    # Pre-compute all LCS lengths
     for a in range(1, len(alice) + 1):
         for b in range(1, len(bob) + 1):
             if alice[a - 1] == bob[b - 1]:
@@ -31,16 +36,20 @@ def lcs_table(alice, bob):
 
 @lru_cache()
 def all_lcs_helper(table, alice, bob, a, b):
-    # Definitely not fast enough
+    # Base case: no strings
     if a == 0 or b == 0:
         return set()
+
+    # Match at current heads
     elif alice[a - 1] == bob[b - 1]:
-        # Can use alice or bob
+        # Move to next head (to the left)
         result = all_lcs_helper(table, alice, bob, a - 1, b - 1)
+        # Append all results to current match
         if result:
-            return {sub_lcs + alice[a - 1] for sub_lcs in result}
+            return {sub_lcs + alice[a - 1] for sub_lcs in result}  # Can use alice or bob
         else:
             return {alice[a - 1]}
+    # No match, reduce each string separately
     else:
         lcs = set()
         if table[a, b - 1] >= table[a - 1, b]:
